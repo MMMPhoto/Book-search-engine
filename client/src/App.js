@@ -1,8 +1,34 @@
 import React from 'react';
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttplink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
+
+const httpLink = createHttplink({
+  uri: '/graphql'
+});
+
+// Set up Auth link
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : ''
+    }
+  };
+});
+
+//Set up Apollo client
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
+
+// TO DO: Add ApolloClient to App Component
 
 function App() {
   return (
