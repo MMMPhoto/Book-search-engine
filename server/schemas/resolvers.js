@@ -25,8 +25,9 @@ const resolvers = {
             if (!user) {
                 throw new AuthenticationError('There is no user found with this email!');
             }
+            console.log(user);
 
-            const correctPassword = await User.isCorrectPassword(password);
+            const correctPassword = await user.isCorrectPassword(password);
 
             if (!correctPassword) {
                 throw new AuthenticationError('Password Incorrect!');
@@ -50,7 +51,7 @@ const resolvers = {
             throw new AuthenticationError('You must be logged in!');
         },
         // Remove Book from user's favorites
-        removebook: async (parent, { bookId }, context) => {
+        removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
                 return User.findOneAndUpdate(
                     { _id: context.user._id },
