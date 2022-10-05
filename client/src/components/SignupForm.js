@@ -40,7 +40,7 @@ const SignupForm = () => {
     } catch (error) {
       console.error(error);
       setShowAlert(true);
-    }
+    };
 
     setUserFormData({
       username: '',

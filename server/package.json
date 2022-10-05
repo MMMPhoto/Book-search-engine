@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "watch": "nodemon server.js"
+    "start": "node server.js --ignore client",
+    "watch": "nodemon server.js --ignore client"
   },
   "keywords": [],
   "author": "",
