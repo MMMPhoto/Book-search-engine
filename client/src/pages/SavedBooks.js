@@ -12,7 +12,8 @@ const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
   // Query User
-  const { loading, data } = useQuery(QUERY_ME);
+  const { loading, queryData } = useQuery(QUERY_ME);
+  // setUserData(queryData)
 
   // Remove Book function
   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
@@ -20,23 +21,23 @@ const SavedBooks = () => {
   // use this to determine if `useEffect()` hook needs to run again
   // const userDataLength = Object.keys(userData).length;
 
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-  //       if (!token) {
-  //         return false;
-  //       }
+        if (!token) {
+          return false;
+        }
        
-  //       setUserData(user);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
+        setUserData(queryData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  //   getUserData();
-  // }, [userDataLength]);
+    getUserData();
+  }, );
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -48,10 +49,10 @@ const SavedBooks = () => {
 
     // Send book to remove to server
     try {
-      const { data } = await removeBook({
+      const { queryData } = await removeBook({
         variables: { bookId: bookId }
       });
-      console.log(data);
+      console.log(queryData);
 
       // const response = await deleteBook(bookId, token);
 
@@ -60,7 +61,7 @@ const SavedBooks = () => {
       // }
 
       // const updatedUser = await response.json();
-      setUserData(data);
+      setUserData(queryData);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
@@ -69,9 +70,9 @@ const SavedBooks = () => {
   };
 
   // if data isn't here yet, say so
-  // if (!userDataLength) {
-  //   return <h2>LOADING...</h2>;
-  // }
+  if (!userData) {
+    return <h2>LOADING...</h2>;
+  }
 
   return (
     <>
